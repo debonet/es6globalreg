@@ -52,9 +52,9 @@ console.log( c === d ); // false;
 ## GlobalReg.get( signature, create_function ) 
 
 
-| _*signature*_ string - A unique string identifier for this resource
+> _*signature*_ string - A unique string identifier for this resource
 
-| _*create_function*_ - function() - A function with no arguments that gets called if the resource does not already exist
+> _*create_function*_ - function() - A function with no arguments that gets called if the resource does not already exist
 
 
 Creates a new object and adds it to the registry if none is found. 
@@ -66,11 +66,11 @@ Returns a promise to deliver the gloablly registered object.
 ## GlobalReg.release( x, cleanup_function, all ) 
 
 
-| _*x*_ - object - The object to be released from the registry
+> _*x*_ - object - The object to be released from the registry
 
-| _*cleanup_function*_ - optioanl function() defaults to  () => {}` - A function with no arguments that gets called if all outstanding instances have been released
+> _*cleanup_function*_ - optioanl function() defaults to  () => {}` - A function with no arguments that gets called if all outstanding instances have been released
 
-| _*all*_ - optioanl boolean - A function with no arguments that gets called if all outstanding instances have been released
+> _*all*_ - optioanl boolean - A function with no arguments that gets called if all outstanding instances have been released
 
 Reduces the count the provided object. If no more instances are outstanding, will call the provided cleanup function
 
@@ -85,7 +85,7 @@ shorthand for `GlobalReg.fRelease( x, cleanup_function, true )`
 ## GlobalReg.fcInstances( x )
 ## GlobalReg.instances( x )
 
-| _*x*_ - object - The object of interest
+> _*x*_ - object - The object of interest
 
 Returns the count of outstanging instances of the indicated object in the registry
 
