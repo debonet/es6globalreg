@@ -1,46 +1,51 @@
-const Mutex = require( "@debonet/es6mutex" );
+const Condition = require( "@debonet/es6condition" );
 
-function faGR(){
-	return global[ "@debonet/es6globalreg" ] ??= { mutex : new Mutex(), aRegistry: {} };
+function faGlobalReg(){
+	return global[ "@debonet/es6globalreg" ] ??= { };
 }
 
 // -------------------------------------------------------------------------
 // -------------------------------------------------------------------------
 async function fpxGet( s, fxNew ){
-	const aGR = faGR();
-	const aReg = aGR.aRegistry;
+	const aReg = faGlobalReg();
 	
 	if ( !aReg[ s ] ){
-		await aGR.mutex.criticalSection(()=> {
-			aReg[ s ] = { x : fxNew(), c : 0 };
-		});
+		aReg[ s ] = { cond : new Condition(), c : 0 };
+		aReg[ s ].x = await fxNew();
+		aReg[ s ].c = 1;
+		aReg[ s ].cond.broadcast();
+		return aReg[ s ].x;
 	}
-
-	aReg[ s ].c++;
-	return aReg[ s ].x;
+	else{
+		if ( aReg[ s ].c == 0 ){
+			await aReg[ s ].cond.wait();
+		}
+		
+		aReg[ s ].c++;
+		return aReg[ s ].x;
+	}
 }
 
 // -------------------------------------------------------------------------
 // -------------------------------------------------------------------------
 async function fpRelease( x, fClean = () => {}, bAll = false ){
-	const aGR = faGR();
-	const aReg = aGR.aRegistry;
+	const aReg = faGlobalReg();
 	
 	for ( let s in aReg ){
 		if ( aReg[ s ].x === x ){
 			aReg[ s ].c--;
-			const c = aReg[ s ].c;
-
+			c = aReg[ s ].c;
+			
 			if ( aReg[ s ].c <= 0 || bAll ){
-				await aGR.mutex.criticalSection(()=> {
-					fClean();
-					delete aReg[ s ];
-				});
+				delete aReg[ s ];
+				await fClean();
 			}
 
 			return c;
 		}
 	}
+	
+	return 0;
 }
 
 // -------------------------------------------------------------------------
@@ -52,8 +57,7 @@ async function fpReleaseAll( x, fClean = () => {} ){
 // -------------------------------------------------------------------------
 // -------------------------------------------------------------------------
 function fcInstances( x ){
-	const aGR = faGR();
-	const aReg = aGR.aRegistry;
+	const aReg = faGlobalReg();
 
 	for ( let s in aReg ){
 		if ( aReg[ s ].x === x ){
