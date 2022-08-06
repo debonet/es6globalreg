@@ -1,0 +1,25 @@
+{
+  "name": "@debonet/es6globalreg",
+  "version": "0.0.1",
+  "description": "Simple library for managing globally shared objects",
+  "main": "src/es6globalreg.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/debonet/es6globalreg.git"
+  },
+  "author": "Jeremy De Bonet",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/debonet/es6globalreg/issues"
+  },
+  "homepage": "https://github.com/debonet/es6globalreg#readme",
+  "dependencies": {
+    "@debonet/es6mutex": "^1.0.1"
+  },
+  "devDependencies": {
+    "jest": "^28.1.3"
+  }
+}
