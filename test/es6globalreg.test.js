@@ -35,9 +35,17 @@ test("ensure release works", async () => {
 
 	// release all copies
 	await GlobalReg.releaseAll( b );
-	await GlobalReg.release( c );
 
 	expect( GlobalReg.instances( b )).toBe( 0 );
+
+	let bThrows = false;
+	try{
+		await GlobalReg.release( c );
+	}
+	catch( err ){
+		bThrows = true;
+	}
+	expect( bThrows ).toBe( true );
 
 	// new get()'s don't share any more
 	const d = await GlobalReg.get( "bar", () => new MyClass());

@@ -74,7 +74,7 @@ Returns a promise to deliver the gloablly registered object.
 
 Reduces the count the provided object. If no more instances are outstanding, will call the provided cleanup function
 
-Returns a promise that resolves to the remaining count
+Returns a promise that resolves to the object `{ globalreg: # }` or to the result of the cleanup_function, if called
 
 ## GlobalReg.fReleaseAll( x, cleanup_function ) 
 ## GlobalReg.releaseAll( x, cleanup_function ) 

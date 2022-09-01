@@ -34,18 +34,18 @@ async function fpRelease( x, fClean = () => {}, bAll = false ){
 	for ( let s in aReg ){
 		if ( aReg[ s ].x === x ){
 			aReg[ s ].c--;
-			c = aReg[ s ].c;
+			const c = aReg[ s ].c;
 			
-			if ( aReg[ s ].c <= 0 || bAll ){
+			if ( c <= 0 || bAll ){
 				delete aReg[ s ];
-				await fClean();
+				return await fClean();
 			}
 
-			return c;
+			return { "globalreg" : c };
 		}
 	}
 	
-	return 0;
+	throw( new Error( "unknown global registry element" ));
 }
 
 // -------------------------------------------------------------------------
